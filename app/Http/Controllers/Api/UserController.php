@@ -7,6 +7,7 @@ use App\Models\User;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -27,22 +28,20 @@ class UserController extends Controller
                 'password' => bcrypt($request->password),
                 'born_date' => $request->born_date,
             ]);
+            $user->save();
 
             return [
                 'status' => Response::HTTP_OK,
                 'message' => "Sign up successful !",
                 'data' => $user
             ];
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
 
             return [
                 'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
                 'message' => $e->getMessage(),
                 'data' => []
             ];
-
         }
     }
 
@@ -65,15 +64,12 @@ class UserController extends Controller
                 'message' => "Edit successful !",
                 'data' => $updated_user
             ];
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return [
                 'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
                 'message' => $e->getMessage(),
                 'data' => []
             ];
-
         }
     }
 }

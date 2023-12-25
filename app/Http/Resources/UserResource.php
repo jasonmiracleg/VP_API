@@ -16,7 +16,7 @@ class UserResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'profile_picture' => $this->profile_picture,
+            'image' => $this->image,
             'name' => $this->name,
             'email' => $this->email,
             'password' => $this->Crypt::decryptString($this->password),
