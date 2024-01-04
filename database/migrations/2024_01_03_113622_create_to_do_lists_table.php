@@ -19,8 +19,13 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->time('timer');
             $table->integer('total_seconds');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('reminder_id');
             $table->foreign('reminder_id')->references('id')->on('reminders')->onDelete('cascade');
+            $table->unsignedBigInteger('grouping_id')->nullable();
+            $table->foreign('grouping_id')->references('id')->pn('groupings')->onDelete('cascade');
+            $table->date('date');
             $table->timestamps();
         });
     }

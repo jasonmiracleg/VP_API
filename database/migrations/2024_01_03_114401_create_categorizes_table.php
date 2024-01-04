@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('to_do_list_id')->index();
             $table->foreign('to_do_list_id')->references('id')->on('to_do_lists')->onDelete('cascade');
-            $table->unsignedBigInteger('category_id')->index();
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->unsignedBigInteger('category_id')->index()->nullable();
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
             $table->timestamps();
         });
     }
