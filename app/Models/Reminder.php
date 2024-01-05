@@ -12,6 +12,6 @@ class Reminder extends Model
     protected $fillable = ['time_hours', 'time_minutes'];
     public function reminder(): HasOne
     {
-        return $this->hasOne(Reminder::class, 'reminder_id', 'id');
+        return $this->hasOne(ToDoList::class, 'reminder_id', 'id');
     }
 }

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class ToDoList extends Model
 {
     use HasFactory;
-    protected $fillable =  ['title', 'is_group', 'is_complete', 'description', 'timer', 'total_seconds', 'reminder_id', 'grouping_id'];
+    protected $fillable =  ['title', 'is_group', 'is_complete', 'description', 'timer', 'total_seconds', 'elapsed', 'timer_started', 'reminder_id', 'date', 'grouping_id'];
 
     public function reminder(): BelongsTo
     {
