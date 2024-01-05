@@ -2,19 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ToDoList extends Model
 {
     use HasFactory;
     protected $fillable =  ['title', 'is_group', 'is_complete', 'description', 'timer', 'total_seconds', 'elapsed', 'timer_started', 'reminder_id', 'date', 'grouping_id'];
 
-    public function reminder(): BelongsTo
+    public function reminder(): HasOne
     {
-        return $this->belongsTo(Reminder::class, 'reminder_id', 'id');
+        return $this->hasOne(Reminder::class, 'to_do_list_id', 'id');
     }
     public function grouping(): BelongsTo
     {

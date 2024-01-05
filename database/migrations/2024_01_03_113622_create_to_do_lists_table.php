@@ -23,8 +23,6 @@ return new class extends Migration
             $table->enum('timer_started', ['0', '1'])->default('0')->nullable(); // 0 = stop
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->unsignedBigInteger('reminder_id');
-            $table->foreign('reminder_id')->references('id')->on('reminders')->onDelete('cascade');
             $table->unsignedBigInteger('grouping_id')->nullable();
             $table->foreign('grouping_id')->references('id')->on('groupings')->onDelete('cascade');
             $table->date('date');

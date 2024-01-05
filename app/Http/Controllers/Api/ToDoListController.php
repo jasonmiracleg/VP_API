@@ -44,10 +44,6 @@ class ToDoListController extends Controller
     public function createToDoList(Request $request)
     {
         try {
-            $reminder = Reminder::create([
-                'time_hours' => $request->time_hours,
-                'time_minutes' => $request->time_minutes
-            ]);
             $tdl = ToDoList::create([
                 'title' => $request->title,
                 'is_group' => $request->is_group,
@@ -57,6 +53,11 @@ class ToDoListController extends Controller
                 'total_seconds' => $request->total_seconds,
                 'user_id' => $request->user_id,
                 'date' => $request->date
+            ]);
+            Reminder::create([
+                'time_hours' => $request->time_hours,
+                'time_minutes' => $request->time_minutes,
+                'to_do_list_id' => $tdl->id
             ]);
             return [
                 "status" => Response::HTTP_OK,
@@ -83,15 +84,17 @@ class ToDoListController extends Controller
                 'description' => $request->description,
                 'timer' => $request->timer,
                 'total_seconds' => $request->total_seconds,
-                'reminder_id' => $request->reminder_id,
                 'date' => $request->date
             ]);
 
             if ($update_tdl->reminder) {
-                $update_tdl->reminder->update([
-                    'time_hours' => $request->time_hours,
-                    'time_minutes' => $request->time_minutes
-                ]);
+                // Check if the user is updating the Reminder values
+                if ($request->has('time_hours') || $request->has('time_minutes')) {
+                    $update_tdl->reminder->update([
+                        'time_hours' => $request->time_hours,
+                        'time_minutes' => $request->time_minutes
+                    ]);
+                }
             }
 
             return [
