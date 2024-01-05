@@ -29,9 +29,9 @@ class User extends Authenticatable
         'productive_time',
     ];
 
-    protected function tasks(): HasMany
+    public function tasks(): HasMany
     {
-        return $this->hasMany(Categorize::class, 'to_do_list_id', 'id');
+        return $this->hasMany(ToDoList::class, 'user_id', 'id');
     }
 
     public function grouping(): HasMany

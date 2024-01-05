@@ -11,8 +11,9 @@ class Group extends Model
     use HasFactory;
     protected $fillable = ['group_name', 'description'];
 
-    public function grouping(): HasMany
+
+    public function group(): HasMany
     {
-        return $this->hasMany(Grouping::class, 'user_id', 'id');
+        return $this->hasMany(Grouping::class, 'group_id', 'id');
     }
 }

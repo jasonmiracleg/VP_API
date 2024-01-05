@@ -17,10 +17,15 @@ return new class extends Migration
             $table->enum('is_group', ['0', '1'])->default('0'); // 0 = individual
             $table->enum('is_complete', ['0', '1'])->default('0'); // 0 = progress
             $table->text('description')->nullable();
-            $table->time('timer');
-            $table->integer('total_seconds');
-            $table->unsignedBigInteger('reminder_id');
-            $table->foreign('reminder_id')->references('id')->on('reminders')->onDelete('cascade');
+            $table->time('timer')->nullable();
+            $table->integer('total_seconds')->nullable();
+            $table->time('elapsed')->nullable();
+            $table->enum('timer_started', ['0', '1'])->default('0')->nullable(); // 0 = stop
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('grouping_id')->nullable();
+            $table->foreign('grouping_id')->references('id')->on('groupings')->onDelete('cascade');
+            $table->date('date');
             $table->timestamps();
         });
     }
