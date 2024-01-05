@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\Api\CategoryController;
-use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\GroupController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\GroupingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +29,13 @@ Route::post('create_category', [CategoryController::class, 'createCategory']);
 Route::delete('delete_category', [CategoryController::class, 'deleteCategory']);
 //     }
 // );
+//
+//GROUP & GROUPING
+Route::get('groups', [GroupController::class, 'listGroup']);
+Route::post('create_group', [GroupController::class, 'createGroup']);
+Route::delete('delete_group', [GroupController::class, 'deleteGroup']);
+Route::post('/groups/{groupId}/users/{userId}', [GroupingController::class, 'addUserToGroup']);
+
 
 Route::get('/all_user', [UserController::class, 'index']);
 

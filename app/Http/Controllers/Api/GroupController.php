@@ -2,49 +2,49 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\GroupResource;
 use App\Models\Group;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 class GroupController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    public function listGroup(Request $request): array
     {
-        //
+        $groups = Group::all();
+        return [
+            "status" => Response::HTTP_OK,
+            "message" => "Success",
+            "data" => GroupResource::collection($groups)
+
+        ];
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function createGroup(Request $request)
     {
-        //
+        $group = new Group();
+        $group->group_name = $request->group_name;
+        $group->description = $request->description;
+        $group->save();
+
+        return [
+            "status" => Response::HTTP_OK,
+            "message" => "Success",
+            "data" => $group
+        ];
     }
 
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Group $group)
+    public function deleteGroup(Request $request)
     {
-        //
-    }
+        $group = Group::where("id", $request->id)->first();
+        $group->delete();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Group $group)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Group $group)
-    {
-        //
+        return [
+            "status" => Response::HTTP_OK,
+            "message" => "Success",
+            "data" => $group
+        ];
     }
 }

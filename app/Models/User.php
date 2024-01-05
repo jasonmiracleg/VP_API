@@ -34,6 +34,11 @@ class User extends Authenticatable
         return $this->hasMany(Categorize::class, 'to_do_list_id', 'id');
     }
 
+    public function grouping(): HasMany
+    {
+        return $this->hasMany(Grouping::class, 'user_id', 'id');
+    }
+
     protected function image(): Attribute
     {
         return Attribute::make(
