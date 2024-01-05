@@ -33,6 +33,12 @@ Route::middleware('auth:sanctum')->group(
         Route::post('create_category', [CategoryController::class, 'createCategory']);
         Route::delete('delete_category', [CategoryController::class, 'deleteCategory']);
 
+        Route::get('all_toDoList', [ToDoListController::class, 'allToDoList']);
+        Route::get('today_toDoList', [ToDoListController::class, 'todayToDoList']);
+        Route::post('create_toDoList', [ToDoListController::class, 'createToDoList']);
+        Route::post('update_toDoList', [ToDoListController::class, 'editToDoList']);
+        Route::delete('delete_toDoList', [ToDoListController::class, 'deleteToDoList']);
+
         Route::post('timer_start', [ToDoListController::class, 'startTimer']);
         Route::post('timer_stop', [ToDoListController::class, 'stopTimer']);
         Route::get('timer_state', [ToDoListController::class, 'getTimerState']);
