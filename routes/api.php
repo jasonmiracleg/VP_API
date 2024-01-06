@@ -42,6 +42,7 @@ Route::middleware('auth:sanctum')->group(
         Route::get('categories', [CategoryController::class, 'ListCategory']);
         Route::post('create_category', [CategoryController::class, 'createCategory']);
         Route::delete('delete_category', [CategoryController::class, 'deleteCategory']);
+        Route::post('categorizing/{toDoList}', [CategoryController::class, 'setCategory']);
 
         Route::get('all_toDoList', [ToDoListController::class, 'allToDoList']);
         Route::get('today_toDoList', [ToDoListController::class, 'todayToDoList']);

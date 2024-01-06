@@ -3,14 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Category;
+use App\Models\ToDoList;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
+use Exception;
 use Symfony\Component\HttpFoundation\Response;
 
 class CategoryController extends Controller
 {
-    public function ListCategory(Request $request): array
+    public function ListCategory(): array
     {
         $categories = Category::all();
         return [
@@ -37,7 +39,8 @@ class CategoryController extends Controller
 
     public function deleteCategory(Request $request)
     {
-        $category = Category::where("id", $request->id)->first();
+        $category = Category::findOrFail($request->id);
+        $category->customToDoLists()->detach();
         $category->delete();
 
         return [
@@ -45,5 +48,26 @@ class CategoryController extends Controller
             "message" => "Success",
             "data" => $category
         ];
+    }
+
+    public function setCategory(Request $request, ToDoList $toDoList)
+    {
+        try {
+            $categoryIDs = $request->input('category_ids', []);
+
+            $toDoList->categories()->sync($categoryIDs);
+
+            return [
+                "status" => Response::HTTP_OK,
+                "message" => "Success",
+                "data" => $toDoList->load('categories'),
+            ];
+        } catch (Exception $e) {
+            return [
+                "status" => Response::HTTP_INTERNAL_SERVER_ERROR,
+                "message" => $e->getMessage(),
+                "data" => []
+            ];
+        }
     }
 }
