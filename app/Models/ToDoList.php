@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ToDoList extends Model
 {
@@ -25,8 +26,8 @@ class ToDoList extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
-    public function categorizing(): HasMany
+    public function categories(): BelongsToMany
     {
-        return $this->hasMany(Categorize::class, 'to_do_list_id', 'id');
+        return $this->belongsToMany(Category::class, 'categorizes', 'to_do_list_id', 'category_id');
     }
 }

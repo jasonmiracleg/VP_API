@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ToDoListController extends Controller
 {
-    public function allToDoList()
+    public function allToDoList(): array
     {
         $toDoLists = ToDoList::all();
         return [
@@ -27,12 +27,9 @@ class ToDoListController extends Controller
 
     public function todayToDoList()
     {
-        $today_tdl = [];
-        foreach (ToDoList::all() as $tdl) {
-            if (Carbon::today('Asia/Jakarta')->isSameDay($tdl->date)) {
-                $todayt_tdl[] = $tdl;
-            }
-        }
+        $today_tdl = ToDoList::with('categories')
+            ->whereDate('date', today('Asia/Jakarta'))
+            ->get();
 
         return [
             "status" => Response::HTTP_OK,

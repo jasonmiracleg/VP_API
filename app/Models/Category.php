@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Category extends Model
 {
@@ -12,8 +13,8 @@ class Category extends Model
 
     protected $fillable = ['title', 'color'];
 
-    public function categorizing(): HasMany
+    public function customToDoLists(): BelongsToMany
     {
-        return $this->hasMany(Categorize::class, 'category_id', 'id');
+        return $this->belongsToMany(ToDoList::class, 'categorizes', 'category_id', 'to_do_list_id');
     }
 }
