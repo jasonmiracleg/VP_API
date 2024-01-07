@@ -20,7 +20,7 @@ class ToDoListController extends Controller
 {
     public function allToDoList($userId): array
     {
-        $toDoLists = ToDoList::where('id', $userId)->get();
+        $toDoLists = ToDoList::with('categories')->where('id', $userId)->get();
         return [
             "status" => Response::HTTP_OK,
             "message" => "Success",
@@ -73,7 +73,7 @@ class ToDoListController extends Controller
             ]);
 
             // Assuming 'day_name' and 'user_id' are columns in your to_do_lists table
-            $tasks = DB::table('to_do_lists')
+            $tasks = ToDoList::with('categories')
                 ->where('day', $request->day)
                 ->where('user_id', $request->user_id)
                 ->get();
