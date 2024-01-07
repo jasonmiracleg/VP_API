@@ -19,13 +19,13 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->time('timer')->nullable();
             $table->integer('total_seconds')->nullable();
-            $table->time('elapsed')->nullable();
             $table->enum('timer_started', ['0', '1'])->default('0')->nullable(); // 0 = stop
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('group_id')->nullable();
             $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
             $table->date('date');
+            $table->string('day');
             $table->timestamps();
         });
     }

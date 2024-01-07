@@ -21,7 +21,7 @@ class GroupingController extends Controller
         $user = User::findOrFail($userId);
 
         // Check if the user is already in the group
-        if (!$group->grouping() == $user->id) {
+        if (!$group->grouping()->where('user_id', $user->id)->exists()) {
             // Add the user to the group with the specified status
             $group->grouping()->attach($user, ['is_accepted' => $request->is_accepted]);
 

@@ -26,7 +26,8 @@ class ToDoListResource extends JsonResource
             'user_id' => $this->user_id,
             'reminder_id' => $this->reminder_id,
             'grouping_id' => $this->grouping_id,
-            'date' => $this->date
+            'date' => $this->date,
+            'day' => $this->day
         ];
     }
 }

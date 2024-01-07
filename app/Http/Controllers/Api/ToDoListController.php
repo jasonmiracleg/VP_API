@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use DateTime;
 use Exception;
 use DateInterval;
 use App\Models\Group;
@@ -9,6 +10,7 @@ use App\Models\Reminder;
 use App\Models\ToDoList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ToDoListResource;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,6 +42,56 @@ class ToDoListController extends Controller
         ];
     }
 
+    public function getAllGroupTasks($groupId)
+    {
+        try {
+            $group = Group::findOrFail($groupId);
+
+            // Get all tasks associated with the group
+            $tasks = $group->toDoLists;
+
+            return [
+                "status" => Response::HTTP_OK,
+                "message" => "Successfully retrieved all tasks for the group",
+                "data" => $tasks
+            ];
+        } catch (Exception $e) {
+            return [
+                'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
+                'message' => $e->getMessage(),
+                'data' => []
+            ];
+        }
+    }
+
+    public function getTasksByDayName(Request $request)
+    {
+        try {
+            $request->validate([
+                'day' => 'required|string',
+                'user_id' => 'required|numeric',
+            ]);
+
+            // Assuming 'day_name' and 'user_id' are columns in your to_do_lists table
+            $tasks = DB::table('to_do_lists')
+                ->where('day', $request->day)
+                ->where('user_id', $request->user_id)
+                ->get();
+
+            return [
+                "status" => Response::HTTP_OK,
+                "message" => "Successfully retrieved tasks for the specified day and user",
+                "data" => $tasks
+            ];
+        } catch (Exception $e) {
+            return [
+                'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
+                'message' => $e->getMessage(),
+                'data' => []
+            ];
+        }
+    }
+
     public function createToDoListGroup(Request $request)
     {
         try {
@@ -50,7 +102,8 @@ class ToDoListController extends Controller
                 'description' => $request->description,
                 'date' => $request->date,
                 'user_id' => $request->user_id,
-                'group_id' => $request->group_id
+                'group_id' => $request->group_id,
+                'day' => $this->getDayNameFromDate($request->date)
             ]);
             return [
                 "status" => Response::HTTP_OK,
@@ -77,7 +130,8 @@ class ToDoListController extends Controller
                 'timer' => $request->timer,
                 'total_seconds' => $request->total_seconds,
                 'user_id' => $userId,
-                'date' => $request->date
+                'date' => $request->date,
+                'day' => $this->getDayNameFromDate($request->date)
             ]);
             Reminder::create([
                 'time_hours' => $request->time_hours,
@@ -98,10 +152,22 @@ class ToDoListController extends Controller
         }
     }
 
+    private function getDayNameFromDate($date)
+    {
+        $dateTime = new DateTime($date);
+        return $dateTime->format('l');
+    }
+
     public function editToDoList(Request $request, ToDoList $toDoList)
     {
         try {
             $toDoList->fill($request->all())->save();
+            if ($request->has('date')) {
+                $toDoList->update([
+                    'day' => $this->getDayNameFromDate($toDoList->date),
+                ]);
+            }
+
             if ($toDoList->reminder) {
                 // Check if the user is updating the Reminder values
                 if ($request->has('time_hours') || $request->has('time_minutes')) {
@@ -130,6 +196,7 @@ class ToDoListController extends Controller
     {
         $data = $request->all();
 
+
         // Ensure the task belongs to the correct group
         if ($toDoList->group_id != $group->id) {
             return [
@@ -141,7 +208,11 @@ class ToDoListController extends Controller
 
         // Update the task details
         $toDoList->fill($data)->save();
-
+        if ($request->has('date')) {
+            $toDoList->update([
+                'day' => $this->getDayNameFromDate($toDoList->date),
+            ]);
+        }
         return [
             "status" => Response::HTTP_OK,
             "message" => "Successfully updated the to-do list in the group",
@@ -165,19 +236,6 @@ class ToDoListController extends Controller
                 'data' => []
             ];
         }
-    }
-
-    public function deleteToDoListGroup(Group $group, ToDoList $toDoList)
-    {
-        // Detach the to-do list from the group
-        $group->toDoLists()->detach($toDoList->id);
-        $toDoList->delete();
-
-        return [
-            "status" => Response::HTTP_OK,
-            "message" => "Successfully deleted the to-do list from the group",
-            "data" => []
-        ];
     }
 
     public function startTimer(Request $request)
@@ -208,8 +266,10 @@ class ToDoListController extends Controller
             $toDoList = ToDoList::findOrFail($request->id);
 
             // Update the to-do list
-            $toDoList->elapsed = Carbon::parse($request->elapsed)->format('H:i:s');
             $toDoList->timer_started = '0'; // Assuming timer_started is a boolean field
+            $toDoList->update([
+                'total_seconds' => $request->total_seconds
+            ]);
             $toDoList->save();
 
             // Update user's productive time
@@ -220,11 +280,13 @@ class ToDoListController extends Controller
                 // Extract hours, minutes, and seconds from the elapsed time string
                 list($hours, $minutes, $seconds) = explode(':', $request->elapsed);
 
+                // Convert hours, minutes, and seconds to total seconds
+                $totalSecondsToAdd = ($hours * 3600) + ($minutes * 60) + $seconds;
+
                 // Add the elapsed time directly to the productive_time column
                 $user->productive_time = Carbon::parse($user->productive_time)
-                    ->addHours((int)$hours)
-                    ->addMinutes((int)$minutes)
-                    ->addSeconds((int)$seconds);
+                    ->addSeconds($totalSecondsToAdd)
+                    ->format('H:i:s'); // Format to store only the time
             } else {
                 // If $request->elapsed is already in time data type
                 $user->productive_time = Carbon::parse($user->productive_time)
@@ -235,9 +297,9 @@ class ToDoListController extends Controller
             return [
                 "status" => Response::HTTP_OK,
                 "message" => "Timer stopped successfully",
-                "data" => [$toDoList, $user]
+                "data" => [$toDoList]
             ];
-        } catch (ModelNotFoundException $e) {
+        } catch (Exception $e) {
             return [
                 "status" => Response::HTTP_NOT_FOUND,
                 "message" => "To Do List not found",
@@ -249,14 +311,14 @@ class ToDoListController extends Controller
     public function getTimerState(Request $request)
     {
         try {
-            $toDoList = ToDoList::where('id', $request->id);
+            $toDoList = ToDoList::where('id', $request->id)->first();
 
             return [
                 "status" => Response::HTTP_OK,
                 "message" => "Success",
-                "data" => $toDoList
+                "data" => $toDoList->timer
             ];
-        } catch (ModelNotFoundException $e) {
+        } catch (Exception $e) {
             return [
                 "status" => Response::HTTP_NOT_FOUND,
                 "message" => "To Do List not found",

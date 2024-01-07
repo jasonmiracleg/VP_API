@@ -41,10 +41,11 @@ Route::middleware('auth:sanctum')->group(
         Route::get('today_toDoList/{userId}', [ToDoListController::class, 'todayToDoList']);
         Route::post('create_toDoList/{userId}', [ToDoListController::class, 'createToDoList']);
         Route::post('update_toDoList/{toDoList}', [ToDoListController::class, 'editToDoList']);
+        Route::get('tasks-byDay', [ToDoListController::class, 'getTasksByDayName']);
         Route::delete('delete_toDoList', [ToDoListController::class, 'deleteToDoList']);
-        Route::post('create-toDoList-group', [ToDoListController::class, 'createToDoListGroup']);
+        Route::post('create-toDoList-group/', [ToDoListController::class, 'createToDoListGroup']);
         Route::post('group/{group}/toDoList/{toDoList}', [ToDoListController::class, 'editToDoListGroup']);
-        Route::delete('delete-toDoList-group/{group}', [ToDoListController::class, 'deleteToDoListGroup']);
+        Route::get('group-toDoList/{groupId}', [ToDoListController::class, 'getAllGroupTasks']);
 
         //GROUP & GROUPING
         Route::get('groups/{userId}', [GroupController::class, 'listGroup']);

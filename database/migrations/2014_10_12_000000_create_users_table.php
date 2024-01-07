@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->date('born_date');
-            $table->time('productive_time');
             $table->rememberToken();
             $table->timestamps();
         });

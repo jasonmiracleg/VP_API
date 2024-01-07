@@ -23,6 +23,6 @@ class Group extends Model
     }
     public function toDoLists(): HasMany
     {
-        return $this->hasMany(ToDoList::class, 'to_do_list_id', 'id');
+        return $this->hasMany(ToDoList::class, 'group_id', 'id');
     }
 }
