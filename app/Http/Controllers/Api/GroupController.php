@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Resources\GroupResource;
+use App\Models\User;
 use App\Models\Group;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\GroupResource;
 use Symfony\Component\HttpFoundation\Response;
 
 class GroupController extends Controller
 {
 
-    public function listGroup(Request $request): array
+    public function listGroup($userId): array
     {
-        $groups = Group::all();
+        $user = User::find($userId);
+        $groups = $user->grouping;
         return [
             "status" => Response::HTTP_OK,
             "message" => "Success",
             "data" => GroupResource::collection($groups)
-
         ];
     }
 

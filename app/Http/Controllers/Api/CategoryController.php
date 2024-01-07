@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\ToDoListResource;
 use App\Models\Category;
 use App\Models\ToDoList;
 use Illuminate\Http\Request;
@@ -22,6 +23,15 @@ class CategoryController extends Controller
         ];
     }
 
+    public function categoryWithToDoList(Category $category)
+    {
+        $toDoList = $category->customToDoLists;
+        return [
+            "status" => Response::HTTP_OK,
+            "message" => "Success",
+            "data" => ToDoListResource::collection($toDoList)
+        ];
+    }
 
     public function createCategory(Request $request)
     {

@@ -9,17 +9,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Grouping extends Model
-{ 
+{
     use HasFactory;
 
     protected $fillable = ['user_id', 'group_id', 'is_accepted'];
     public function members(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
-    }
-    public function grouping(): HasMany
-    {
-        return $this->hasMany(ToDoList::class, 'grouping_id', 'id');
     }
     public function group(): BelongsTo
     {

@@ -18,14 +18,14 @@ class ToDoListResource extends JsonResource
             'title' => $this->title,
             'is_group' => $this->is_group,
             'is_complete' => $this->is_complete,
-            'description' => optional($this->description),
-            'timer' => optional($this->timer),
-            'total_seconds' => optional($this->total_seconds),
-            'elapsed' => optional($this->elapsed),
-            'timer_started' => optional($this->timer_started),
-            'user_id' => optional($this->user_id),
+            'description' => $this->description,
+            'timer' => $this->timer,
+            'total_seconds' => $this->total_seconds,
+            'elapsed' => $this->elapsed,
+            'timer_started' => $this->timer_started,
+            'user_id' => $this->user_id,
             'reminder_id' => $this->reminder_id,
-            'grouping_id' => optional($this->grouping_id),
+            'grouping_id' => $this->grouping_id,
             'date' => $this->date
         ];
     }

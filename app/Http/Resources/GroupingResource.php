@@ -14,6 +14,10 @@ class GroupingResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'user_id' => $this->user_id,
+            'group_id' => $this->group_id,
+            'is_accepted' => $this->is_accepted
+        ];
     }
 }

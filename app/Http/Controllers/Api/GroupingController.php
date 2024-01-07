@@ -21,9 +21,9 @@ class GroupingController extends Controller
         $user = User::findOrFail($userId);
 
         // Check if the user is already in the group
-        if (!$group->users->contains($user)) {
+        if (!$group->grouping() == $user->id) {
             // Add the user to the group with the specified status
-            $group->users()->attach($user, ['is_accepted' => $request->is_accepted]);
+            $group->grouping()->attach($user, ['is_accepted' => $request->is_accepted]);
 
             return response()->json([
                 'status' => Response::HTTP_OK,
@@ -37,5 +37,15 @@ class GroupingController extends Controller
                 'data' => $group
             ]);
         }
+    }
+
+    public function getMembers(Group $group)
+    {
+        $members = $group->grouping()->where('is_accepted', '1')->get();
+        return [
+            'status' => Response::HTTP_OK,
+            'message' => 'Success',
+            'data' => $members,
+        ];
     }
 }

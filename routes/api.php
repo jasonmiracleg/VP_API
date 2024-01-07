@@ -24,14 +24,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Route::middleware('auth:sanctum')->group(
-//     function () {
-Route::get('categories', [CategoryController::class, 'ListCategory']);
-Route::post('create_category', [CategoryController::class, 'createCategory']);
-Route::delete('delete_category', [CategoryController::class, 'deleteCategory']);
-//     }
-// );
-
 Route::get('/all_user', [UserController::class, 'index']);
 Route::post('/create_user', [UserController::class, 'createUser']);
 Route::post('login', [AuthenticationController::class, 'logIn']);
@@ -43,19 +35,23 @@ Route::middleware('auth:sanctum')->group(
         Route::post('create_category', [CategoryController::class, 'createCategory']);
         Route::delete('delete_category', [CategoryController::class, 'deleteCategory']);
         Route::post('categorizing/{toDoList}', [CategoryController::class, 'setCategory']);
+        Route::get('toDoList-category/{category}', [CategoryController::class, 'categoryWithToDoList']);
 
-        Route::get('all_toDoList', [ToDoListController::class, 'allToDoList']);
-        Route::get('today_toDoList', [ToDoListController::class, 'todayToDoList']);
-        Route::post('create_toDoList', [ToDoListController::class, 'createToDoList']);
-        Route::post('update_toDoList', [ToDoListController::class, 'editToDoList']);
+        Route::get('all_toDoList/{userId}', [ToDoListController::class, 'allToDoList']);
+        Route::get('today_toDoList/{userId}', [ToDoListController::class, 'todayToDoList']);
+        Route::post('create_toDoList/{userId}', [ToDoListController::class, 'createToDoList']);
+        Route::post('update_toDoList/{toDoList}', [ToDoListController::class, 'editToDoList']);
         Route::delete('delete_toDoList', [ToDoListController::class, 'deleteToDoList']);
+        Route::post('create-toDoList-group', [ToDoListController::class, 'createToDoListGroup']);
+        Route::post('group/{group}/toDoList/{toDoList}', [ToDoListController::class, 'editToDoListGroup']);
+        Route::delete('delete-toDoList-group/{group}', [ToDoListController::class, 'deleteToDoListGroup']);
 
         //GROUP & GROUPING
-        Route::get('groups', [GroupController::class, 'listGroup']);
+        Route::get('groups/{userId}', [GroupController::class, 'listGroup']);
         Route::post('create_group', [GroupController::class, 'createGroup']);
         Route::delete('delete_group', [GroupController::class, 'deleteGroup']);
         Route::post('/groups/{groupId}/users/{userId}', [GroupingController::class, 'addUserToGroup']);
-
+        Route::get('group-members/{group}', [GroupingController::class, 'getMembers']);
 
         Route::post('timer_start', [ToDoListController::class, 'startTimer']);
         Route::post('timer_stop', [ToDoListController::class, 'stopTimer']);

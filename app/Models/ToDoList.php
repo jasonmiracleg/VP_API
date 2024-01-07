@@ -12,15 +12,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class ToDoList extends Model
 {
     use HasFactory;
-    protected $fillable =  ['title', 'is_group', 'is_complete', 'description', 'timer', 'total_seconds', 'elapsed', 'timer_started', 'reminder_id', 'date', 'grouping_id'];
+    protected $fillable =  ['title', 'is_group', 'is_complete', 'description', 'timer', 'total_seconds', 'elapsed', 'timer_started', 'reminder_id', 'date', 'group_id'];
 
     public function reminder(): HasOne
     {
         return $this->hasOne(Reminder::class, 'to_do_list_id', 'id');
     }
-    public function grouping(): BelongsTo
+    public function toDoLists(): BelongsTo
     {
-        return $this->belongsTo(Grouping::class, 'grouping_id', 'id');
+        return $this->belongsTo(Group::class, 'group_id', 'id');
     }
     public function tasks(): BelongsTo
     {
