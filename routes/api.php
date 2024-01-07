@@ -24,8 +24,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/all_user', [UserController::class, 'index']);
-Route::post('/create_user', [UserController::class, 'createUser']);
+Route::get('all_user', [UserController::class, 'index']);
+Route::post('create_user', [UserController::class, 'createUser']);
 Route::post('login', [AuthenticationController::class, 'logIn']);
 
 
@@ -51,7 +51,7 @@ Route::middleware('auth:sanctum')->group(
         Route::get('groups/{userId}', [GroupController::class, 'listGroup']);
         Route::post('create_group', [GroupController::class, 'createGroup']);
         Route::delete('delete_group', [GroupController::class, 'deleteGroup']);
-        Route::post('/groups/{groupId}/users/{userId}', [GroupingController::class, 'addUserToGroup']);
+        Route::post('groups/{groupId}/users/{userId}', [GroupingController::class, 'addUserToGroup']);
         Route::get('group-members/{group}', [GroupingController::class, 'getMembers']);
 
         Route::post('timer_start', [ToDoListController::class, 'startTimer']);
