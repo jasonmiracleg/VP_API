@@ -23,31 +23,29 @@ class UserController extends Controller
     public function createUser(Request $request)
     {
         try {
-            $file = $request->file('image');
-            $imageName = time() . '_' . $file->getClientOriginalName();
-            $file->move(\public_path("/assets/image/"), $imageName);
+            // $file = $request->file('image');
+            // $imageName = time() . '_' . $file->getClientOriginalName();
+            // $file->move(\public_path("/assets/image/"), $imageName);
 
-            $user = User::create([
-                'image' => $imageName,
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'born_date' => $request->born_date,
-                'productive_time' => '00:00:00'
-            ]);
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->born_date = $request->born_date;
+            // $user->image = $imageName;
             $user->save();
 
             return [
                 'status' => Response::HTTP_OK,
                 'message' => "Sign up successful !",
-                'data' => $user
+                'data' => $user->id
             ];
         } catch (Exception $e) {
 
             return [
                 'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
                 'message' => $e->getMessage(),
-                'data' => []
+                'data' => 0
             ];
         }
     }
@@ -66,21 +64,20 @@ class UserController extends Controller
 
             $updated_user = User::find($request->id);
 
-            if (File::exists("assets/image/" . $updated_user->image)) {
-                File::delete("assets/image/" . $updated_user->image);
-            }
+            // if (File::exists("assets/image/" . $updated_user->image)) {
+            //     File::delete("assets/image/" . $updated_user->image);
+            // }
 
-            $file = $request->file('image');
-            $imageName = time() . '_' . $file->getClientOriginalName();
-            $file->move(\public_path("/assets/image/"), $imageName);
+            // $file = $request->file('image');
+            // $imageName = time() . '_' . $file->getClientOriginalName();
+            // $file->move(\public_path("/assets/image/"), $imageName);
 
             $updated_user->update([
                 'name' => $request->name,
-                'image' => $imageName,
+                // 'image' => $imageName,
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
                 'born_date' => $request->born_date,
-                'productive_time' => $request->productive_time
             ]);
 
             return [

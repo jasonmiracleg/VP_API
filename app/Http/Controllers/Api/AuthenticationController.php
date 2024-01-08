@@ -13,21 +13,29 @@ class AuthenticationController extends Controller
 {
     public function logIn(Request $request)
     {
-        try {
-            $user = User::where('email', $request->email)->first();
-
+        $user = User::where('email', $request->email)->first();
+        if (!empty($user)) {
             if (Hash::check($request->password, $user->password)) {
                 return [
                     'status' => Response::HTTP_OK,
                     'message' => "Sign In Successful",
-                    'data' => $user->createToken('login')->plainTextToken
+                    'token' => $user->createToken('login')->plainTextToken,
+                    'userId' => $user->id
+                ];
+            } else {
+                return [
+                    'status' => Response::HTTP_FORBIDDEN,
+                    'message' => 'Incorrect Password',
+                    'userId' => -1,
+                    'token' => ""
                 ];
             }
-        } catch (Exception $e) {
+        } else {
             return [
-                'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                'message' => $e->getMessage(),
-                'data' => []
+                'status' => Response::HTTP_NOT_FOUND,
+                'message' => 'User Not Found',
+                'userId' => -1,
+                'token' => ""
             ];
         }
     }

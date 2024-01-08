@@ -22,12 +22,10 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'image',
         'name',
         'email',
         'password',
         'born_date',
-        'productive_time',
     ];
 
     public function tasks(): HasMany
