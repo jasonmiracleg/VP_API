@@ -13,9 +13,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CategoryController extends Controller
 {
-    public function ListCategory(): array
+    public function ListCategory($userId): array
     {
-        $categories = Category::all();
+        $categories = Category::where('user_id', $userId)->get();
         return [
             "status" => Response::HTTP_OK,
             "message" => "Success",
@@ -36,8 +36,9 @@ class CategoryController extends Controller
     public function createCategory(Request $request)
     {
         $category = new Category();
-        $category->title = $request->title;
+        $category->title = $request->category_title;
         $category->color = $request->color;
+        $category->user_id = $request->user_id;
         $category->save();
 
         return [

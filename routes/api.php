@@ -31,7 +31,7 @@ Route::post('login', [AuthenticationController::class, 'logIn']);
 
 Route::middleware('auth:sanctum')->group(
     function () {
-        Route::get('categories', [CategoryController::class, 'ListCategory']);
+        Route::get('categories/{userId}', [CategoryController::class, 'ListCategory']);
         Route::post('create_category', [CategoryController::class, 'createCategory']);
         Route::delete('delete_category', [CategoryController::class, 'deleteCategory']);
         Route::post('categorizing/{toDoList}', [CategoryController::class, 'setCategory']);
