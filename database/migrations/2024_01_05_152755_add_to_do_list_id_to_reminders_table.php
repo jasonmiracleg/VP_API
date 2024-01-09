@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categorizes', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('to_do_list_id')->index();
+        Schema::table('reminders', function (Blueprint $table) {
+            $table->unsignedBigInteger('to_do_list_id')->after('id');
             $table->foreign('to_do_list_id')->references('id')->on('to_do_lists')->onDelete('cascade');
-            $table->unsignedBigInteger('category_id')->index()->nullable();
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
-            $table->timestamps();
         });
     }
 
@@ -26,6 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categorizes');
+        Schema::table('reminders', function (Blueprint $table) {
+            $table->dropForeign(['to_do_list_id']);
+            $table->dropColumn('to_do_list_id');
+        });
     }
 };

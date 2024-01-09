@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Models\User;
 use Exception;
-use Symfony\Component\HttpFoundation\Response;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
@@ -17,30 +19,33 @@ class UserController extends Controller
         return $users;
     }
 
+
     public function createUser(Request $request)
     {
         try {
+            // $file = $request->file('image');
+            // $imageName = time() . '_' . $file->getClientOriginalName();
+            // $file->move(\public_path("/assets/image/"), $imageName);
 
-            $user = User::create([
-                'profile_picture' => $request->profile_picture,
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-                'born_date' => $request->born_date,
-            ]);
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->born_date = $request->born_date;
+            // $user->image = $imageName;
             $user->save();
 
             return [
                 'status' => Response::HTTP_OK,
                 'message' => "Sign up successful !",
-                'data' => $user
+                'data' => $user->id
             ];
         } catch (Exception $e) {
 
             return [
                 'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
                 'message' => $e->getMessage(),
-                'data' => []
+                'data' => 0
             ];
         }
     }
@@ -48,15 +53,31 @@ class UserController extends Controller
     public function updateUser(Request $request)
     {
         $updated_user = User::find($request->id);
+        if (!$updated_user) {
+            return [
+                'message' => 'error'
+            ];
+        }
+
 
         try {
 
+            $updated_user = User::find($request->id);
+
+            // if (File::exists("assets/image/" . $updated_user->image)) {
+            //     File::delete("assets/image/" . $updated_user->image);
+            // }
+
+            // $file = $request->file('image');
+            // $imageName = time() . '_' . $file->getClientOriginalName();
+            // $file->move(\public_path("/assets/image/"), $imageName);
+
             $updated_user->update([
-                'profile_picture' => $request->profile_picture,
                 'name' => $request->name,
+                // 'image' => $imageName,
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
-                'born_date' => $request->born_date
+                'born_date' => $request->born_date,
             ]);
 
             return [

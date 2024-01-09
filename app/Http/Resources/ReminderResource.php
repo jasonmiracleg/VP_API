@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class GroupResource extends JsonResource
+class ReminderResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,9 +14,6 @@ class GroupResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
-            'group_name' => $this->group_name,
-            'description' => $this->description
-        ];
+        return parent::toArray($request);
     }
 }

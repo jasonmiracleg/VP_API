@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class GroupResource extends JsonResource
+class GroupingResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,8 +15,9 @@ class GroupResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'group_name' => $this->group_name,
-            'description' => $this->description
+            'user_id' => $this->user_id,
+            'group_id' => $this->group_id,
+            'is_accepted' => $this->is_accepted
         ];
     }
 }
