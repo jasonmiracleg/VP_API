@@ -39,7 +39,7 @@ Route::middleware('auth:sanctum')->group(
 
         Route::get('all_toDoList/{userId}', [ToDoListController::class, 'allToDoList']);
         Route::get('today_toDoList/{userId}', [ToDoListController::class, 'todayToDoList']);
-        Route::post('create_toDoList/{userId}', [ToDoListController::class, 'createToDoList']);
+        Route::post('create_toDoList', [ToDoListController::class, 'createToDoList']); //ilangin parameter dlu aku pinjem
         Route::post('update_toDoList/{toDoList}', [ToDoListController::class, 'editToDoList']);
         Route::get('tasks-byDay', [ToDoListController::class, 'getTasksByDayName']);
         Route::delete('delete_toDoList', [ToDoListController::class, 'deleteToDoList']);

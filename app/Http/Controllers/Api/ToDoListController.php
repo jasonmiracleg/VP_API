@@ -15,6 +15,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ToDoListResource;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
 
 class ToDoListController extends Controller
 {
@@ -119,25 +120,26 @@ class ToDoListController extends Controller
         }
     }
 
-    public function createToDoList(Request $request, $userId)
+    // aku ganti ke Auth::id()
+    public function createToDoList(Request $request)
     {
         try {
             $tdl = ToDoList::create([
                 'title' => $request->title,
-                'is_group' => $request->is_group,
+                'is_group' => '0',
                 'is_complete' => '0',
                 'description' => $request->description,
                 'timer' => $request->timer,
                 'total_seconds' => $request->total_seconds,
-                'user_id' => $userId,
+                'user_id' => Auth::id(),
                 'date' => $request->date,
                 'day' => $this->getDayNameFromDate($request->date)
             ]);
-            Reminder::create([
-                'time_hours' => $request->time_hours,
-                'time_minutes' => $request->time_minutes,
-                'to_do_list_id' => $tdl->id
-            ]);
+            // Reminder::create([
+            //     'time_hours' => $request->time_hours,
+            //     'time_minutes' => $request->time_minutes,
+            //     'to_do_list_id' => $tdl->id
+            // ]);
             return [
                 "status" => Response::HTTP_OK,
                 "message" => "Successfully create To Do List",
