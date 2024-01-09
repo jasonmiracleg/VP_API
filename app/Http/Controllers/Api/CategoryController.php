@@ -36,7 +36,7 @@ class CategoryController extends Controller
     public function createCategory(Request $request)
     {
         $category = new Category();
-        $category->title = $request->category_title;
+        $category->title = $request->title;
         $category->color = $request->color;
         $category->user_id = $request->user_id;
         $category->save();
