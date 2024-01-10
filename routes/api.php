@@ -31,13 +31,14 @@ Route::post('login', [AuthenticationController::class, 'logIn']);
 
 Route::middleware('auth:sanctum')->group(
     function () {
+        Route::post('update_tdlComplete', [ToDoListController::class, 'updateToDoListComplete']);
         Route::get('categories/{userId}', [CategoryController::class, 'ListCategory']);
         Route::post('create_category', [CategoryController::class, 'createCategory']);
         Route::delete('delete_category', [CategoryController::class, 'deleteCategory']);
         Route::post('categorizing/{toDoList}', [CategoryController::class, 'setCategory']);
         Route::get('toDoList-category/{category}', [CategoryController::class, 'categoryWithToDoList']);
 
-        Route::get('all_toDoList/{userId}', [ToDoListController::class, 'allToDoList']);
+        Route::get('all_toDoList/{userId}', [ToDoListController::class, 'allToDoList']); //ak ilangin parameter userId
         Route::get('today_toDoList/{userId}', [ToDoListController::class, 'todayToDoList']);
         Route::post('create_toDoList', [ToDoListController::class, 'createToDoList']); //ilangin parameter dlu aku pinjem
         Route::post('update_toDoList/{toDoList}', [ToDoListController::class, 'editToDoList']);

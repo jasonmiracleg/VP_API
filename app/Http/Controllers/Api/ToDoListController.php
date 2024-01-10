@@ -19,9 +19,10 @@ use Illuminate\Support\Facades\Auth;
 
 class ToDoListController extends Controller
 {
-    public function allToDoList($userId): array
+    public function allToDoList($userId) : array //ilangin id aku
     {
-        $toDoLists = ToDoList::with('categories')->where('id', $userId)->get();
+        // $toDoLists = ToDoList::with('categories')
+        $toDoLists = ToDoList::where('user_id', $userId)->get();
         return [
             "status" => Response::HTTP_OK,
             "message" => "Success",
@@ -120,6 +121,46 @@ class ToDoListController extends Controller
         }
     }
 
+    public function updateToDoListComplete(Request $request)
+    {
+        $complete_tdl = ToDoList::find($request->id)::where('user_id', Auth::id());
+        // if ($complete_tdl) {
+        //     return [
+        //         "status" => Response::HTTP_OK,
+        //         "message" => "Successfully complete To Do List",
+        //         "data" => $complete_tdl
+        //     ];
+        // }
+        try {
+            // $complete_tdl = ToDoList::create([
+            //     'title' => 'haha',
+            //     'is_group' => '0',
+            //     'is_complete' => '0',
+            //     'description' => 'hehe',
+            //     'date' => '2024-09-01',
+            //     'user_id' => '1',
+            //     'day' => $this->getDayNameFromDate($request->date)
+            // ]);
+
+            $complete_tdl->update([
+                'is_complete' => $request->is_complete
+            ]);
+            $complete_tdl->save();
+
+            return [
+                "status" => Response::HTTP_OK,
+                "message" => "Successfully complete To Do List",
+                "data" => $complete_tdl
+            ];
+        }
+        catch (Exception $e) {
+            return [
+                "status" => Response::HTTP_OK,
+                "message" => $e->getMessage(),
+                "data" => []
+            ];
+        }
+    }
     // aku ganti ke Auth::id()
     public function createToDoList(Request $request)
     {
